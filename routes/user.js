@@ -6,7 +6,7 @@ router.route("")
     .get(user.getUsers)
 
 router.route("/login")
-    .get(user.userLogin)
+    .post(user.userLogin)
 
 router.route("/signup")
     .post(user.userSignup)

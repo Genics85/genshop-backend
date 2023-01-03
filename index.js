@@ -14,7 +14,7 @@ app.use("/user", require("./routes/user"));
 
 mongoose.connection.once("open", () => {
   console.log("connected to mogodb");
-});
-app.listen(PORT, (req, res) => {
-  console.log(`listening for connections on port ${PORT}`);
+  app.listen(PORT, (req, res) => {
+    console.log(`listening for connections on port ${PORT}`);
+  });
 });
