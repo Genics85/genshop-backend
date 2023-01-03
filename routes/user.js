@@ -4,7 +4,7 @@ const user = require("../controllers/user");
 
 router.route("")
     .get(user.getUsers)
-    
+
 router.route("/login")
     .get(user.userLogin)
 
