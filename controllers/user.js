@@ -7,8 +7,20 @@ const userLogin = async (req, res) => {
     const { email, password } = req.body;
     if (!email || !password)
       return res.json({ msg: "Email or password cant be empty" });
+    const emailIn = Users.findOne({ email: email });
+    if (!emailIn)
+      return res.json({
+        msg: "Email does not exist in database, consider signing up",
+      });
+    const match = await bcrypt.compare(password, emailIn.password);
+    if (!match)
+      return res.json({
+        msg: "Mismatched password, make sure caps is off and try again",
+      });
+    console.log(`${email} logged in `);
+    res.json({msg:"success"})
   } catch (error) {
-    console.log(`${error}`)
+    console.log(`${error}`);
   }
 };
 
@@ -29,13 +41,13 @@ const userSignup = async (req, res) => {
       email: email,
       password: hashedPassword,
     });
-
     console.log(newUser);
     res.status(201).json({ msg: "success" });
   } catch (error) {
     console.log(`${error}`);
   }
 };
+
 const getUsers = async (req, res) => {
   console.log("this returns all users in the database");
 };
