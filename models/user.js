@@ -15,6 +15,9 @@ const userSchema = mongoose.Schema({
         type:String,
         required:true
     },
+    refreshToken:{
+        type:String,
+    },
     date:{
         type:Date,
         default:Date.now()

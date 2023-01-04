@@ -11,6 +11,7 @@ mongoConnection();
 //middleware for user route
 app.use(express.json());
 app.use("/user", require("./routes/user"));
+app.use("/secure", require("./routes/secure"));
 
 mongoose.connection.once("open", () => {
   console.log("connected to mogodb");
