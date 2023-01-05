@@ -1,5 +1,6 @@
-const log = (req, res) => {
-  console.log(`${req}`);
+const logger = (req, res,next) => {
+  console.log(`${req.method} \t ${req.header.origin}`);
+  next();
 };
 
-module.exports= log
+module.exports= logger
