@@ -11,7 +11,7 @@ const userLogin = async (req, res) => {
     const user = await Users.findOne({ email: email });
     if (!user)
       return res
-        .status(404)
+        .status(400)
         .json({ msg: "Email does not have an account, consider signup" });
     const passwordMatch = await bcrypt.compare(password, user.password);
     if (!passwordMatch)
