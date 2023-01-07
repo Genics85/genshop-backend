@@ -14,8 +14,9 @@ const productsSchema = new Schema({
         enum:["sm","md","lg"],
         default:"sm"
     },
-    picture:{
-        type:String,
+    img:{
+        data: Buffer,
+        ContentType:"image/png",
         require:true
     },
     date:{
