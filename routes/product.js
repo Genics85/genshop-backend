@@ -1,10 +1,11 @@
 const express = require("express");
 const router=express.Router();
+const upload = require("../controllers/product");
+const multer = require("../config/multerConfig");
 
 router.route("/")
-    .post((req,res)=>{
-        res.send("post a product to the backend")
-    })
+    .post(multer.single("image"),upload)
+    .get((req,res)=>{console.log("get all items")})
 
 router.route("/electronics")
     .get((req,res)=>{

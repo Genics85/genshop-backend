@@ -15,9 +15,11 @@ const productsSchema = new Schema({
         default:"sm"
     },
     img:{
-        data: Buffer,
-        ContentType:"image/png",
+        type:String,
         require:true
+    },
+    cloudinary_id:{
+        type:String
     },
     date:{
         type:Date,
