@@ -18,6 +18,7 @@ app.use(cors());
 
 //middleware for user route
 app.use(express.json());
+app.use("/product",require("./routes/product"));
 app.use("/user", require("./routes/user"));
 app.use("/secure", require("./routes/secure"));
 
