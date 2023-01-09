@@ -17,7 +17,12 @@ const userLogin = async (req, res) => {
     if (!passwordMatch)
       return res.status(401).json({ msg: "Wrong password, try again" });
     const accessToken = jwt.sign(
-      { email: foundUser.email },
+      {
+        userInfo: {
+          email: foundUser.email,
+          role: foundUser.role,
+        },
+      },
       process.env.ACCESS_TOKEN_SECRET,
       { expiresIn: "5m" }
     );
@@ -82,7 +87,12 @@ const userRefreshToken = async (req, res) => {
         if (err || foundUser.email !== decode.email)
           return res.status(403).json({ msg: "bad token" });
         const accessToken = jwt.sign(
-          { email: decode.email },
+          {
+            userInfo: {
+              email: decode.email,
+              role: decode.role,
+            },
+          },
           process.env.ACCESS_TOKEN_SECRET,
           {
             expiresIn: "5m",

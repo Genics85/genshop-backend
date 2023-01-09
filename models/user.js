@@ -1,4 +1,5 @@
 const mongoose= require("mongoose");
+const roles=require("../config/rolesList");
 
 const userSchema = mongoose.Schema({
     name:{
@@ -14,6 +15,11 @@ const userSchema = mongoose.Schema({
     password:{
         type:String,
         required:true
+    },
+    role:{
+        type:String,
+        enum:roles,
+        default:roles[0]
     },
     refreshToken:{
         type:String,
