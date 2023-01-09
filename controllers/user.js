@@ -8,29 +8,33 @@ const userLogin = async (req, res) => {
     const { email, password } = req.body;
     if (!email || !password)
       return res.status(400).json({ msg: "Email or Password cant be empty" });
-    const user = await Users.findOne({ email: email });
-    if (!user)
+    const foundUser = await Users.findOne({ email: email });
+    if (!foundUser)
       return res
         .status(400)
         .json({ msg: "Email does not have an account, consider signup" });
-    const passwordMatch = await bcrypt.compare(password, user.password);
+    const passwordMatch = await bcrypt.compare(password, foundUser.password);
     if (!passwordMatch)
       return res.status(401).json({ msg: "Wrong password, try again" });
     const accessToken = jwt.sign(
-      { email: user.email },
+      { email: foundUser.email },
       process.env.ACCESS_TOKEN_SECRET,
-      { expiresIn: "7d" }
+      { expiresIn: "5m" }
     );
     const refreshToken = jwt.sign(
-      { email: user.email },
+      { email: foundUser.email },
       process.env.REFRESH_TOKEN_SECRET,
-      {expiresIn:"30d"}
+      { expiresIn: "7d" }
     );
-    console.log(refreshToken);
-    user.refreshToken=refreshToken;
-    const result=await user.save();
-    res.status(200).json({ accessToken});
+    foundUser.refreshToken = refreshToken;
+    //saving refreshToken in users database
+    const result = await foundUser.save();
     console.log(result);
+    res.cookie("jwt", refreshToken, {
+      httpOnly: true,
+      maxAge: 24 * 60 * 60 * 1000,
+    });
+    res.status(200).json({ accessToken });
   } catch (error) {
     console.log(`${error}`);
   }
@@ -62,8 +66,57 @@ const userSignup = async (req, res) => {
   }
 };
 
-const getUsers = async (req, res) => {
-  console.log("this returns all users in the database");
+const userRefreshToken = async (req, res) => {
+  try {
+    const cookies = req.cookies;
+    if (!cookies?.jwt) return res.status(401).json({ msg: "no cookies" });
+    const refreshToken = cookies.jwt;
+    const foundUser = await Users.findOne({ refreshToken: refreshToken });
+    if (!foundUser) return res.status(403).json({ msg: "user does not exist" });
+    jwt.verify(
+      refreshToken,
+      process.env.REFRESH_TOKEN_SECRET,
+      (err, decode) => {
+        if (err || foundUser.email !== decode.email)
+          return res.status(403).json({ msg: "bad token" });
+        const accessToken = jwt.sign(
+          { email: decode.email },
+          process.env.ACCESS_TOKEN_SECRET,
+          {
+            expiresIn: "5m",
+          }
+        );
+        res.status(200).json({ accessToken });
+      }
+    );
+  } catch (error) {
+    console.log(error);
+  }
 };
 
-module.exports = { userLogin, userSignup, getUsers };
+const userLogout = async (req, res) => {
+  try {
+    const cookies = req.cookies;
+    if (!cookies?.jwt) return res.sendStatus(204);
+    const refreshToken = cookies.jwt;
+    const foundUser =await Users.findOne({ refreshToken: refreshToken });
+    if (!foundUser) {
+      res.clearCookie("jwt", { httpOnly: true, maxAge: "24*60*60*1000" });
+      res.sendStatus(204);
+    }
+    //deleting refreshToken from database
+    foundUser.refreshToken ="";
+    const result=await foundUser.save();
+    console.log(result);
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+module.exports = {
+  userLogin,
+  userSignup,
+  userLogout,
+  userRefreshToken,
+
+};
