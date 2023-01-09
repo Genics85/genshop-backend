@@ -32,6 +32,8 @@ const userLogin = async (req, res) => {
     console.log(result);
     res.cookie("jwt", refreshToken, {
       httpOnly: true,
+      sameSite: "None",
+      secure: true,
       maxAge: 24 * 60 * 60 * 1000,
     });
     res.status(200).json({ accessToken });
@@ -99,14 +101,24 @@ const userLogout = async (req, res) => {
     const cookies = req.cookies;
     if (!cookies?.jwt) return res.sendStatus(204);
     const refreshToken = cookies.jwt;
-    const foundUser =await Users.findOne({ refreshToken: refreshToken });
+    const foundUser = await Users.findOne({ refreshToken: refreshToken });
     if (!foundUser) {
-      res.clearCookie("jwt", { httpOnly: true, maxAge: "24*60*60*1000" });
+      res.clearCookie("jwt", {
+        httpOnly: true,
+        sameSite: "None",
+        secure: true,
+      });
       res.sendStatus(204);
     }
     //deleting refreshToken from database
-    foundUser.refreshToken ="";
-    const result=await foundUser.save();
+    foundUser.refreshToken = "";
+    const result = await foundUser.save();
+    res.clearCookie("jwt", {
+      httpOnly: true,
+      sameSite: "None",
+      secure: true,
+    });
+    res.sendStatus(204);
     console.log(result);
   } catch (error) {
     console.log(error);
@@ -118,5 +130,4 @@ module.exports = {
   userSignup,
   userLogout,
   userRefreshToken,
-
 };
