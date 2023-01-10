@@ -4,7 +4,7 @@ const roles=require("../config/rolesList");
 const userSchema = mongoose.Schema({
     name:{
         type:String,
-        required:true
+        required:true,
     },
 
     email:{
@@ -19,7 +19,7 @@ const userSchema = mongoose.Schema({
     role:{
         type:String,
         enum:roles,
-        default:roles[0]
+        default:"user"
     },
     refreshToken:{
         type:String,

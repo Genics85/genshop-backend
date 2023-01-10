@@ -50,7 +50,7 @@ const userLogin = async (req, res) => {
 //controller for signing up a user
 const userSignup = async (req, res) => {
   try {
-    const { email, password, name } = req.body;
+    const { email, password, name, role } = req.body;
     if (!email || !password || !name)
       return res
         .status(400)
@@ -65,6 +65,7 @@ const userSignup = async (req, res) => {
       name: name,
       email: email,
       password: hashedPassword,
+      role: role,
     });
     console.log(newUser);
     res.status(201).json({ msg: "success" });

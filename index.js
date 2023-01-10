@@ -6,6 +6,7 @@ const mongoConnection = require("./config/mongodbConfig");
 const logger = require("./middlewares/logger");
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
+const verifyJWT = require("./middlewares/verifyJWT");
 const PORT = process.env.PORT || 5000;
 
 //Connecting to mongodb
@@ -21,6 +22,8 @@ app.use(cors());
 app.use(express.json());
 app.use("/product",require("./routes/product"));
 app.use("/user", require("./routes/user"));
+
+app.use(verifyJWT,require("./middlewares/verifyJWT"));
 app.use("/secure", require("./routes/secure"));
 
 mongoose.connection.once("open", () => {
