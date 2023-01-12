@@ -7,12 +7,12 @@ const userLogin = async (req, res) => {
   try {
     const { email, password } = req.body;
     if (!email || !password)
-      return res.status(400).json({ msg: "Email or Password cant be empty" });
+      return res.status(400).json({ msg: "email or password cant be empty" });
     const foundUser = await Users.findOne({ email: email });
     if (!foundUser)
       return res
         .status(400)
-        .json({ msg: "Email does not have an account, consider signup" });
+        .json({ msg: "Email does not exist, sign up instead" });
     const passwordMatch = await bcrypt.compare(password, foundUser.password);
     if (!passwordMatch)
       return res.status(401).json({ msg: "Wrong password, try again" });
@@ -34,14 +34,14 @@ const userLogin = async (req, res) => {
     foundUser.refreshToken = refreshToken;
     //saving refreshToken in users database
     const result = await foundUser.save();
-    console.log(result);
     res.cookie("jwt", refreshToken, {
       httpOnly: true,
       sameSite: "None",
       secure: true,
       maxAge: 24 * 60 * 60 * 1000,
     });
-    res.status(200).json({ accessToken });
+    console.log(result);
+    res.status(200).json({refreshToken,email:foundUser.email,role:foundUser.role});
   } catch (error) {
     console.log(`${error}`);
   }
@@ -67,7 +67,7 @@ const userSignup = async (req, res) => {
       password: hashedPassword,
       role: role,
     });
-    console.log(newUser);
+
     res.status(201).json({ msg: "success" });
   } catch (error) {
     console.log(`${error}`);
@@ -130,7 +130,7 @@ const userLogout = async (req, res) => {
       secure: true,
     });
     res.sendStatus(204);
-    console.log(result);
+
   } catch (error) {
     console.log(error);
   }
