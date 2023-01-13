@@ -41,7 +41,7 @@ const userLogin = async (req, res) => {
       maxAge: 24 * 60 * 60 * 1000,
     });
     console.log(result);
-    res.status(200).json({refreshToken,email:foundUser.email,role:foundUser.role});
+    res.status(200).json({accessToken,email:foundUser.email,role:foundUser.role});
   } catch (error) {
     console.log(`${error}`);
   }
