@@ -23,7 +23,7 @@ app.use(express.json());
 app.use("/product",require("./routes/product"));
 app.use("/user", require("./routes/user"));
 
-app.use(verifyJWT,require("./middlewares/verifyJWT"));
+// app.use(verifyJWT,require("./middlewares/verifyJWT"));
 app.use("/secure", require("./routes/secure"));
 
 mongoose.connection.once("open", () => {
