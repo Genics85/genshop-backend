@@ -9,10 +9,9 @@ const productsSchema = new mongoose.Schema({
         type:String,
         require:true,
     },
-    size:{
+    category:{
         type:String,
-        enum:["sm","md","lg"],
-        default:"sm"
+        require:true
     },
     img:{
         type:String,
