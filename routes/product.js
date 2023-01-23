@@ -1,25 +1,24 @@
 const express = require("express");
-const router=express.Router();
+const router = express.Router();
 const products = require("../controllers/product");
 const multer = require("../config/multerConfig");
 
-router.route("/")
-    .post(multer.single("image"),products.upload)
-    .get((req,res)=>{console.log("get all items")})
+//for uploading product and information to the database
+router
+  .route("/upload")
+  .post(multer.single("image"), products.upload)
+  .get((req, res) => {
+    console.log("get all items");
+  });
 
-router.route("/electronics")
-    .get((req,res)=>{
-        res.send("all electronic products")
-    })
-router.route("/home")
-    .get((req,res)=>{
-        res.send("get all home and office products")
-    })
-router.route("/groceries")
-    .get((req,res)=>{
-        res.send("get all groceries")
-    })
-router.route("/:id")
-    .delete(products.remove)
+  //for deleting a product from the database
+router.route("/:id").delete(products.remove);
 
-module.exports = router
+//for getting products with specific category
+router.route("/fashion").get(products.getCategory("fashion"));
+router.route("/grocery").get(products.getCategory("grocery"));
+router.route("/electronics").get(products.getCategory("electronics"));
+router.route("/home").get(products.getCategory("home"));
+router.route("/health").get(products.getCategory("health"));
+
+module.exports = router;
