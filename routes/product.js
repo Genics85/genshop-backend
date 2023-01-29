@@ -11,6 +11,9 @@ router
     console.log("get all items");
   });
 
+  //for getting all products in the database
+  router.route("/getAll").get(products.getAll);
+
   //for deleting a product from the database
 router.route("/:id").delete(products.remove);
 

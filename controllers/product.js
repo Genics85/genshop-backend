@@ -48,4 +48,13 @@ const getCategory= (type)=>{
   }
 }
 
-module.exports = {upload, remove, getCategory};
+const getAll= async(req,res)=>{
+  try {
+    const allProducts=await Products.find();
+    res.status(200).json(allProducts);
+  } catch (error) {
+    console.log(error)
+  }
+}
+
+module.exports = {upload, remove, getCategory,getAll};
