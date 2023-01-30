@@ -15,7 +15,7 @@ router
   router.route("/getAll").get(products.getAll);
 
   //for deleting a product from the database
-router.route("/:id").delete(products.remove);
+router.route("/delete/:id").delete(products.remove);
 
 //for getting products with specific category
 router.route("/fashion").get(products.getCategory("fashion"));

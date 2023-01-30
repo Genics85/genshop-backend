@@ -29,6 +29,7 @@ try {
     const product= await Products.findById(req.params.id);
     await cloudinary.uploader.destroy(product.cloudinary_id);
     await product.remove();
+    console.log("deleted");
     res.json(product);
 } catch (error) {
     console.log(error)
