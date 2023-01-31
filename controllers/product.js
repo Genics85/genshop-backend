@@ -41,7 +41,7 @@ const getCategory= (type)=>{
   return async(req,res)=>{
     try{
       const product=await Products.find({category:type});
-      if(product.length<1) return res.status(404).json({msg:"products not found or empty"});
+      if(product.length<1) return res.status(204).json({msg:"products not found or empty"});
       res.json(product);
     }catch(error){
       console.log(error);
